@@ -1,0 +1,64 @@
+:root { --bg: #cae9ff; --bg2: #bee9e8; --bg3: #62b6cb; --text: #173d4e; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--text); background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%); }
+
+.confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+
+.play-zone { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px calc(90px + env(safe-area-inset-bottom)); }
+.play-zone-inner { position: relative; width: 100%; max-width: 1400px; background: rgba(255,255,255,0.55); border-radius: 22px; box-shadow: 0 14px 40px rgba(0,0,0,0.15); padding: 36px 22px 96px; overflow: hidden; min-height: 70vh; }
+.play-zone-title { margin: 0 0 6px; text-align: center; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.play-zone-subtitle { margin: 0 0 16px; text-align: center; font-weight: 700; opacity: 0.9; }
+
+.hearts-layer, .compliments-layer { position: absolute; inset: 0; }
+.hearts-layer { pointer-events: auto; }
+.compliments-layer { pointer-events: none; }
+
+.heart-emoji { position: absolute; font-size: 36px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15)); will-change: transform, opacity; animation: floatUp var(--dur, 9s) linear forwards; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+@keyframes floatUp { 0% { transform: translateY(6vh) scale(0.9); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) scale(1); opacity: 0; } }
+.heart-emoji.popping { transition: transform 180ms ease, opacity 180ms ease, filter 180ms ease; transform: scale(0.6); opacity: 0; filter: blur(1px); }
+
+.compliment { position: absolute; background: rgba(255,255,255,0.95); padding: 10px 14px; border-radius: 14px; color: var(--text); font-weight: 700; white-space: nowrap; transform: translate(-50%, -50%); box-shadow: 0 12px 28px rgba(0,0,0,0.16); opacity: 0; animation: complimentIn 180ms ease forwards, complimentOut 700ms ease 2200ms forwards; }
+@keyframes complimentIn { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+@keyframes complimentOut { to { transform: translate(-50%, -70%); opacity: 0; } }
+
+.click-burst { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); pointer-events: none; }
+.click-particle { position: absolute; width: 6px; height: 6px; background: #ff8fb3; border-radius: 50%; opacity: 0.95; transform: translate(0, 0); animation: particleFly 520ms ease-out forwards; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18)); }
+@keyframes particleFly { to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+
+.final-message { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.18); backdrop-filter: blur(3px); }
+.final-message[hidden] { display: none !important; }
+.final-message-card { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 22px 26px; box-shadow: 0 16px 40px rgba(0,0,0,0.22); text-align: center; animation: cardIn 380ms ease; }
+.final-line { font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.final-sub { margin-top: 8px; font-weight: 700; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.pink-burst, .click-burst { position: absolute; transform: translate(-50%, -50%); pointer-events: none; }
+.pink-particle, .click-particle { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffd3e3 0%, #ff8fb3 60%, #ff6fa2 100%); opacity: 0; animation: particleOut var(--dur, 520ms) ease-out forwards; left: 0; top: 0; transform: translate(0, 0) scale(0.6); }
+@keyframes particleOut { 0% { opacity: 1; transform: translate(0, 0) scale(0.8); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx, 0px), var(--dy, -40px)) scale(0.6); } }
+
+.instruction-modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.28); backdrop-filter: blur(3px); z-index: 1100; }
+.instruction-modal[hidden] { display: none !important; }
+.instruction-card { background: rgba(255,255,255,0.96); border-radius: 18px; padding: 22px 26px; box-shadow: 0 16px 40px rgba(0,0,0,0.22); text-align: center; width: min(92vw, 520px); animation: cardIn 320ms ease; }
+.instruction-title { font-weight: 800; font-size: 20px; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.instruction-body { font-weight: 600; opacity: 0.85; margin-bottom: 16px; }
+.instruction-close { appearance: none; border: none; cursor: pointer; padding: 10px 16px; border-radius: 12px; font-weight: 700; color: #173d4e; background: linear-gradient(135deg, #ffe1eb 0%, #ffc1d4 100%); box-shadow: 0 6px 16px rgba(255, 143, 179, 0.25); }
+.instruction-close:active { transform: translateY(1px); }
+
+.navigation-icons { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 20px; padding: 15px 20px; background: rgba(255, 255, 255, 0.75); border-radius: 50px; box-shadow: 0 8px 24px rgba(255, 105, 180, 0.15); backdrop-filter: blur(8px); z-index: 1000; }
+.nav-icon { width: 50px; height: 50px; border: none; background: linear-gradient(135deg, #ffe1eb 0%, #ffc1d4 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(255, 143, 179, 0.2); color: #8B5F8C; }
+.nav-icon:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(255, 143, 179, 0.3); background: linear-gradient(135deg, #ffc1d4 0%, #ffe1eb 100%); }
+.nav-icon:active { transform: translateY(-1px) scale(1.02); }
+.nav-icon svg { transition: transform 0.2s ease; }
+
+@media (max-width: 560px) {
+  .play-zone-inner { padding: 18px 12px 64px; border-radius: 18px; }
+  .play-zone-title { font-size: 22px; }
+  .play-zone-subtitle { font-size: 13px; }
+  .heart-emoji { font-size: 40px; }
+  .compliment { max-width: 80vw; white-space: normal; line-height: 1.35; text-align: center; padding: 10px 12px; }
+  .navigation-icons { bottom: calc(12px + env(safe-area-inset-bottom)); gap: 15px; padding: 12px 16px; }
+  .nav-icon { width: 45px; height: 45px; }
+}
+
+
